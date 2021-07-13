@@ -1092,10 +1092,10 @@ mod data {
         pub(crate) fn find_transaction_receipts_in_block(
             &self,
             conn: &PgConnection,
-            chain_name: &str,
+            schema_name: &str,
             block_hash: &H256,
         ) -> anyhow::Result<Vec<LightTransactionReceipt>> {
-            find_transaction_receipts_in_block(conn, chain_name, block_hash)
+            find_transaction_receipts_in_block(conn, schema_name, block_hash)
         }
     }
 }
@@ -1439,11 +1439,10 @@ impl ChainStoreTrait for ChainStore {
     ) -> Result<Vec<LightTransactionReceipt>, StoreError> {
         let pool = self.pool.clone();
         let storage = self.storage.clone();
-        let chain = self.chain.clone();
         let block_hash = block_hash.clone();
         pool.with_conn(move |conn, _| {
             storage
-                .find_transaction_receipts_in_block(&conn, &chain, &block_hash)
+                .find_transaction_receipts_in_block(&conn, &storage.to_string(), &block_hash)
                 .map_err(|e| StoreError::from(e).into())
         })
         .await

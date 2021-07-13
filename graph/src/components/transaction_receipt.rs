@@ -162,11 +162,11 @@ impl TryFrom<RawTransactionReceipt> for LightTransactionReceipt {
 /// Queries the database for all the transaction receipts in a given block range.
 pub fn find_transaction_receipts_in_block(
     conn: &PgConnection,
-    chain_name: &str,
+    schema_name: &str,
     block_hash: &H256,
 ) -> anyhow::Result<Vec<LightTransactionReceipt>> {
     let query = TransactionReceiptQuery {
-        schema_name: chain_name,
+        schema_name,
         block_hash: block_hash.as_bytes(),
     };
 
